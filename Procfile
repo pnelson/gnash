@@ -1,1 +1,1 @@
-web: bundle exec thin start --rackup config.ru --servers 4 --environment $RACK_ENV --port $PORT
+web: bundle exec thin start --rackup config.ru --environment $RACK_ENV --port $PORT
