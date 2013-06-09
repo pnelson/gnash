@@ -1,3 +1,7 @@
+require 'active_support/time'
+
+Chronic.time_class = ActiveSupport::TimeZone.new('Pacific Time (US & Canada)')
+
 if memcache_servers = ENV['MEMCACHE_SERVERS']
   use Rack::Cache,
     verbose:     true,
