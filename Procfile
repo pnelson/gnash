@@ -1,1 +1,1 @@
-web: bundle exec thin start --config config/thin.yml --port $PORT
+web: bundle exec thin start --rackup config.ru --config config/thin.yml --port $PORT
