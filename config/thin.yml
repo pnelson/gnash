@@ -1,3 +1,4 @@
+---
 rackup: config.ru
 environment: production
 servers: 4
