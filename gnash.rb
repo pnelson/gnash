@@ -17,7 +17,7 @@ get '/:grind_user_id' do
   response = Faraday.get(grind_stats_url)
   halt 502 unless response.success?
   cache_control :public, max_age: 3600 # 60 minutes
-  json stats: grind_stats(response.body, grind_stats_year), updated_at: Time.now.utc
+  json stats: grind_stats(response.body, params[:year].to_i), updated_at: Time.now.utc
 end
 
 def grind_stats_id
@@ -26,12 +26,6 @@ end
 
 def grind_stats_url
   "http://www.grousemountain.com/grind_stats/#{grind_stats_id}?trail=1"
-end
-
-def grind_stats_year
-  rv = params[:year].to_i
-  rv = Time.now.year if rv == 0
-  rv
 end
 
 def parse_date(node)
@@ -55,5 +49,5 @@ def grind_stats(html, year)
     # append to the list of results
     stats << { start: start, finish: finish}
   end
-  stats.select { |record| record[:start].year == year }
+  year == 0 ? stats : stats.select { |record| record[:start].year == year }
 end
