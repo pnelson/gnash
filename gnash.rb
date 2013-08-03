@@ -17,7 +17,7 @@ get '/:grind_user_id' do
   response = Faraday.get(grind_stats_url)
   halt 502 unless response.success?
   cache_control :public, max_age: 3600 # 60 minutes
-  json stats: grind_stats(response.body, params[:year].to_i), updated_at: Time.now.utc
+  jsonp stats: grind_stats(response.body, params[:year].to_i), updated_at: Time.now.utc
 end
 
 def grind_stats_id
