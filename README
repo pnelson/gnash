@@ -1,0 +1,8 @@
+Gnash
+=====
+
+Gnash is a quick Sinatra application I wrote to scrape my Grouse Grind stats
+from https://grousemountain.com/ for the purpose of displaying them on my
+personal website.
+
+Copyright (c) 2013 by Philip Nelson. See LICENSE for details.
