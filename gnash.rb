@@ -17,7 +17,7 @@ get '/:grind_user_id' do
   response = Faraday.get(grind_stats_url)
   halt 502 unless response.success?
   cache_control :public, max_age: 3600 # 60 minutes
-  jsonp stats: grind_stats(response.body, params[:year].to_i), updated_at: Time.now.utc
+  jsonp stats: grind_stats(response.body, params[:year].to_i), updated_at: updated_at
 end
 
 def grind_stats_id
@@ -47,7 +47,11 @@ def grind_stats(html, year)
     start = date + time_in_seconds(record[1])
     finish = date + time_in_seconds(record[2])
     # append to the list of results
-    stats << { start: start, finish: finish}
+    stats << { start: start.iso8601, finish: finish.iso8601 }
   end
-  year == 0 ? stats : stats.select { |record| record[:start].year == year }
+  year == 0 ? stats : stats.select { |record| record[:start][0..4].to_i == year }
+end
+
+def updated_at
+  Time.now.utc.iso8601
 end
