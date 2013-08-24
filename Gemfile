@@ -13,3 +13,5 @@ gem 'chronic', '~> 0.9.1'
 gem 'faraday', '~> 0.8.7'
 gem 'nokogiri', '~> 1.5.9'
 gem 'tzinfo', '~> 1.0.0'
+
+gem 'newrelic_rpm'
