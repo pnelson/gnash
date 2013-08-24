@@ -2,6 +2,10 @@ require 'active_support/time'
 
 Chronic.time_class = ActiveSupport::TimeZone.new('Pacific Time (US & Canada)')
 
+configure :production do
+  require 'newrelic_rpm'
+end
+
 if memcache_servers = ENV['MEMCACHE_SERVERS']
   use Rack::Cache,
     verbose:     true,
