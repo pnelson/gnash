@@ -13,15 +13,19 @@ get '/favicon.ico' do
 end
 
 get '/:grind_user_id' do
-  cached = cache.get(grind_stats_id)
+  cached = cache.get(grind_cache_key)
   return jsonp cached unless cached.nil?
   response = Faraday.get(grind_stats_url)
   halt 502 unless response.success?
   rv = Hash.new
   rv[:stats] = grind_stats(response.body, params[:year].to_i)
   rv[:updated_at] = updated_at
-  cache.set(grind_stats_id, rv)
+  cache.set(grind_cache_key, rv)
   jsonp rv
+end
+
+def grind_cache_key
+  "#{grind_stats_id}:#{params[:year].to_i}"
 end
 
 def grind_stats_id
