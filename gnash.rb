@@ -6,13 +6,6 @@ configure :production do
   require 'newrelic_rpm'
 end
 
-if memcache_servers = ENV['MEMCACHE_SERVERS']
-  use Rack::Cache,
-    verbose:     true,
-    metastore:   "memcached://#{memcache_servers}",
-    entitystore: "memcached://#{memcache_servers}"
-end
-
 get '/favicon.ico' do
   halt 404
 end
@@ -20,7 +13,6 @@ end
 get '/:grind_user_id' do
   response = Faraday.get(grind_stats_url)
   halt 502 unless response.success?
-  cache_control :public, max_age: 3600 # 60 minutes
   jsonp stats: grind_stats(response.body, params[:year].to_i), updated_at: updated_at
 end
 
