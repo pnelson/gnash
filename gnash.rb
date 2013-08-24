@@ -6,14 +6,22 @@ configure :production do
   require 'newrelic_rpm'
 end
 
+cache = Dalli::Client.new(nil, expires_in: 3600) # 60 minutes
+
 get '/favicon.ico' do
   halt 404
 end
 
 get '/:grind_user_id' do
+  cached = cache.get(grind_stats_id)
+  return jsonp cached unless cached.nil?
   response = Faraday.get(grind_stats_url)
   halt 502 unless response.success?
-  jsonp stats: grind_stats(response.body, params[:year].to_i), updated_at: updated_at
+  rv = Hash.new
+  rv[:stats] = grind_stats(response.body, params[:year].to_i)
+  rv[:updated_at] = updated_at
+  cache.set(grind_stats_id, rv)
+  jsonp rv
 end
 
 def grind_stats_id
